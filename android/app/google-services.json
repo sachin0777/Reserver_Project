@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "474047722611",
+    "project_id": "general-firebase-affd9",
+    "storage_bucket": "general-firebase-affd9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474047722611:android:feaf3d5497b5668d39e606",
+        "android_client_info": {
+          "package_name": "com.example.insurance_Dapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJnwdyb0T6bdFYL1eASJZgnsar-K6a9jM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474047722611:android:12955060e76a0f7039e606",
+        "android_client_info": {
+          "package_name": "com.example.reservoir_startuptn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJnwdyb0T6bdFYL1eASJZgnsar-K6a9jM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
