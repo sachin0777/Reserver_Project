@@ -1,54 +1,24 @@
-# Use an official Ubuntu as a parent image
-FROM ubuntu:18.04
+# Use the official Flutter image
+FROM cirrusci/flutter:stable
 
-# Set non-interactive installation mode
-ENV DEBIAN_FRONTEND=noninteractive
+# Set the working directory
+WORKDIR /app
 
-# Prerequisites
-RUN apt update && apt install -y \
-    curl \
-    git \
-    unzip \
-    xz-utils \
-    zip \
-    libglu1-mesa \
-    openjdk-8-jdk \
-    wget \
-    lib32stdc++6 \
-    lib32z1 \
-    libbz2-1.0 \
-    libncurses5 \
-    libncursesw5 \
-    libstdc++6 \
-    && rm -rf /var/lib/apt/lists/*
+# Copy the current directory contents into the container at /app
+COPY . .
 
-# Set up a new user and switch to it
-RUN useradd -ms /bin/bash developer
-USER developer
-WORKDIR /home/developer
+# Get dependencies
+RUN flutter pub get
 
-# Prepare Android SDK directories and system variables
-RUN mkdir -p Android/sdk/cmdline-tools
-ENV ANDROID_SDK_ROOT=/home/developer/Android/sdk
-RUN mkdir -p .android && touch .android/repositories.cfg
+# Build the Flutter web application
+RUN flutter build web
 
-# Set up Android SDK
-RUN wget -qO commandlinetools-linux.zip https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
-RUN unzip -q commandlinetools-linux.zip -d Android/sdk/cmdline-tools && rm commandlinetools-linux.zip
-RUN mv Android/sdk/cmdline-tools/cmdline-tools Android/sdk/cmdline-tools/latest
-RUN cd Android/sdk/cmdline-tools/latest/bin && yes | ./sdkmanager --licenses
-RUN cd Android/sdk/cmdline-tools/latest/bin && ./sdkmanager "build-tools;29.0.2" "platform-tools" "platforms;android-29" "sources;android-29"
+# Use nginx to serve the Flutter web application
+FROM nginx:alpine
+COPY --from=0 /app/build/web /usr/share/nginx/html
 
-# Download and set up Flutter SDK
-RUN git clone https://github.com/flutter/flutter.git -b stable
-ENV PATH="$PATH:/home/developer/flutter/bin"
+# Expose port 80
+EXPOSE 80
 
-# Run basic Flutter checks
-RUN flutter doctor --android-licenses
-RUN flutter doctor
-
-# Expose port for the Flutter web server (optional, based on use case)
-EXPOSE 8000
-
-# Default command (can be overridden)
-CMD ["bash"]
+# Start nginx server
+CMD ["nginx", "-g", "daemon off;"]
